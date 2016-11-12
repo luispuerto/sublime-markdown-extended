@@ -834,6 +834,7 @@ contexts:
   bold:
     - match: |-
         (?x)
+        (?<=[^a-zA-Z\d\$=]|^)  # (?<=\s|^) wouldn't handle punctuation
         (\*\*|__)(?=\S)               # Open
         (?=
           (
@@ -868,16 +869,16 @@ contexts:
                 )
               )
             )
-            | (?!(?<=\S)\1).           # Everything besides
+            | (?!(?<=\S)\1(?=[^a-zA-Z\d]|$)).  # Everything besides
                               # style closer
           )++
-          (?<=\S)\1                # Close
+          (?<=\S)\1(?=[^a-zA-Z\d_]|$)  # Close, (?<=\S)\1(?=\s|$) wouldn't support ponctuation
         )
       captures:
         1: punctuation.definition.bold.markdown
       push:
         - meta_scope: markup.bold.markdown
-        - match: (?<=\S)(\1)
+        - match: (?<=\S)(\1)(?=[^a-zA-Z\d]|$)
           captures:
             1: punctuation.definition.bold.markdown
           pop: true
@@ -1032,6 +1033,7 @@ contexts:
   italic:
     - match: |-
         (?x)
+        (?<=[^a-zA-Z\d\$=]|^)  # (?<=\s|^) wouldn't handle punctuation
         (\*|_)(?=\S)                         # Open
         (?=
           (
@@ -1067,16 +1069,16 @@ contexts:
               )
             )
             | \1\1                        # Must be bold closer
-            | (?!(?<=\S)\1).           # Everything besides
+            | (?!(?<=\S)\1(?=[^a-zA-Z\d]|$)).  # Everything besides
                                           # style closer
           )++
-          (?<=\S)\1                    # Close
+          (?<=\S)\1(?=[^a-zA-Z\d]|$)  # Close, (?<=\S)\1(?=\s|$) wouldn't support ponctuation
         )
       captures:
         1: punctuation.definition.italic.markdown
       push:
         - meta_scope: markup.italic.markdown
-        - match: (?<=\S)(\1)((?!\1)|(?=\1\1))
+        - match: (?<=\S)(\1)(?=[^a-zA-Z\d]|$)
           captures:
             1: punctuation.definition.italic.markdown
           pop: true
