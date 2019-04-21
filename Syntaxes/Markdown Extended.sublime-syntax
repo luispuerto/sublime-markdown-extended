@@ -1030,6 +1030,7 @@ contexts:
     - include: image-ref
     - include: link-ref-literal
     - include: link-ref
+    - include: scope:text.html.basic
   italic:
     - match: |-
         (?x)
